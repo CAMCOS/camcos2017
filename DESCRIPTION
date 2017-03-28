@@ -1,11 +1,18 @@
 Package: camcos2017
 Type: Package
-Title: What the Package Does (Title Case)
+Title: CAMCOS Spring 2017 Unsupervised Market Segmentation for Verizon
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: as.person(c("Fengmei Liu [aut]",
+    "Joey Fitch [aut]",
+    "Rachel Li [aut]",
+    "Nate Kotila [aut]"
+    "Sonia Kong [aut]",
+    "Andrew Zastovnik [aut]",
+    "Shiou-Shiou Deng [aut]",
+    "Ryan Quigley <ryan.quigley@sjsu.edu> [aut, cre]
+  ))
+Description: Implementing spectral clustering on the 20newsgroups data set using various combinations of data preprocessing steps and similarity functions.
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
+Depends: Rtsne
