@@ -15,6 +15,4 @@ Description: Implementing spectral clustering on the 20newsgroups data set using
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: 
-    Rtsne, 
-    proxy
+Imports: Rtsne
