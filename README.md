@@ -6,8 +6,14 @@ Install the release version of `devtools` from CRAN with `install.packages("devt
 Then run the following line of code to install the `camcos2017`
 
 ```R
-devtools::install_github("ryan-quigley/camcos2017")
+devtools::install_github("CAMCOS/camcos2017")
 ```
+
+### Dependencies
+
+The function `rtsne_viz` requires the package `Rtsne`, which should be automatically installed when the `camcos2017` package is installed. 
+
+The function `similarity` requires the package `proxy`. This is **not** automatically installed with this package because it requires version 3.3.2 or higher of R. If you have the appropriate version of R, install the `proxy` package manually with `install.packages("proxy")` before using the function.
 
 ### Load Data
 
