@@ -1,40 +1,18 @@
 #' Word Frequencies of 6 News Groups Clusters
 #'
-#' A dataset containing the word frequencies of 6 news groups
-#' selected from the entire 20 news groups dataset. The 6 groups were selected by
-#' taking the first listed topic within each of the six larger subject areas.
-#' The selected groups are (number corresponds to cluster label):
-#' enumerate{
-#'   \item comp.graphics
-#'   \item misc.forsale
-#'   \item rec.autos
-#'   \item sci.crypt
-#'   \item talk.politics.misc
-#'   \item talk.religion.misc
-#' }
+#' A dataset containing the word frequencies and cluster labels of 6 news groups
+#' selected from the entire 20 news groups dataset. The 6 groups were selected
+#' by taking the first listed topic within each of the six larger subject areas.
+#' The selected groups are (number corresponds to cluster label): enumerate{
+#' \item comp.graphics \item misc.forsale \item rec.autos \item sci.crypt \item
+#' talk.politics.misc \item talk.religion.misc }
 #'
-#' @format A data frame with 413588 rows and 3 variables: \describe{
-#'   \item{row}{row index; corresponds to a document from the corpus}
-#'   \item{col}{column index; corresponds to a word from the vocabulary}
-#'   \item{value}{frequency of the word in that document} }
+#' @format A list with two elements: \describe{ \item{data}{A data frame with
+#'   413588 rows and 3 variables. The \code{row} and \code{column} variables are
+#'   the respective indices of the nonzero entries of the sparse matrix. Rows
+#'   correspond to documents from the corpus; columns correspond to a word from
+#'   the vocabulary. The \code{value} column is the frequency of the word in
+#'   that document.} \item{labels}{A integer vector with 3189 values ranging
+#'   from 1 to 6 corresponding to the ground truth labels of the cluster}}
 #' @source \url{http://qwone.com/~jason/20Newsgroups/}
-"cluster6_counts"
-
-#' Labels of 6 News Groups Clusters
-#'
-#' A dataset containing the cluster labels of 6 news groups selected from the
-#' entire 20 news groups dataset. The 6 groups were selected by taking the first
-#' listed topic within each of the six larger subject areas. The selected groups
-#' are (number corresponds to cluster label):
-#' enumerate{
-#'   \item comp.graphics
-#'   \item misc.forsale
-#'   \item rec.autos
-#'   \item sci.crypt
-#'   \item talk.politics.misc
-#'   \item talk.religion.misc
-#' }
-#'
-#' @format A integer vector with 3189 values ranging from 1 to 6.
-#' @source \url{http://qwone.com/~jason/20Newsgroups/}
-"cluster6_labels"
+"cluster6"
