@@ -77,7 +77,14 @@ clustercheck <- function (cluster, Labels, k) {
 
   percent.score <- correct / sum(results)
 
-  return(list(results,percent.score))
+
+  # clean up the assignment matrix
+
+  assignment <- cbind( seq(1,k), assignment[,1])
+  colnames(assignment) <- c("True Cluster", "Assigned Cluster")
+
+
+  return(list(results, assignment, percent.score))
 
 }
 

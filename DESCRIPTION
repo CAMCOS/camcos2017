@@ -1,7 +1,7 @@
 Package: camcos2017
 Type: Package
 Title: CAMCOS Spring 2017 Unsupervised Market Segmentation for Verizon
-Version: 0.1.0
+Version: 1.0.0
 Author: as.person(c("Fengmei Liu [aut]",
     "Joey Fitch [aut]",
     "Rachel Li [aut]",
@@ -15,5 +15,5 @@ Description: Implementing spectral clustering on the 20newsgroups data set using
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: Rtsne
+Imports: Rtsne, Matrix, RSpectra, ggplot2, dplyr
 RoxygenNote: 6.0.1

@@ -11,22 +11,40 @@ devtools::install_github("CAMCOS/camcos2017")
 
 ### Dependencies
 
-The function `rtsne_viz` requires the package `Rtsne`, which should be automatically installed when the `camcos2017` package is installed. 
-
-The function `similarity` requires the package `proxy`. This is **not** automatically installed with this package because it requires version 3.3.2 or higher of R. If you have the appropriate version of R, install the `proxy` package manually with `install.packages("proxy")` before using the function.
+* Data manipulation:
+    * `dplyr`
+* Clustering
+    * `RSpectra`
+    * `Matirx`
+* Vizualization
+    * `Rtsne`
+    * `ggplot2`
 
 ### Load Data
 
-The data subset containing one cluster from each of the main cluster groups is included in the package. 
-The first line of code below will load two objects into the R environment: `cluster6_counts` and `cluster6_labels`. 
-The next line binarizes the counts by setting all values to 1.
+The full 20newsgroups dataset (test and train) is stored in the data object: `newsgroups`. To load the data:
 
 ```R
-data(cluster6)
-cluster6_counts$value <- 1
+data(newsgroups)
 ```
 
-Note: after extracting the six clusters from the original training data set, only two processing steps were performed:
+To select a subset of the full dataset, binarize, or append the vocabulary:
 
-1. Remove any columns that have a column sum of 0
-2. Remap the original cluster labels to 1-6: {2: 1, 7:2, 8:3, 12:4, 19:5, 20:6}
+```R
+## Filter by subject area
+sub0 <- news_subset(newsgroups, filter = c("comp","rec"), binary = TRUE, vocab = TRUE)
+
+## Filter by label numbers
+sub1 <- news_subset(newsgroups, filter = 2:6, binary = TRUE, vocab = TRUE)
+```
+
+### Perform Clustering
+
+```R
+library(magrittr)
+x <- colweights(data = sub0[,1:3], binary = FALSE, weightfunction = "IDF") %>%
+  similarity("correlation") %>%
+  clustering("DiffusionMap", k = 6, t = 0.5) %>%
+  clustercheck(labels.6, k = 6)
+cat("Accuracy: ", round(x[[3]], 2), "%", sep = "", fill = TRUE)
+```
