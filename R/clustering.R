@@ -1,7 +1,17 @@
-
-
-# Method = NJW, Ncut, DiffusionMap
-
+#' Spectral clustering
+#'
+#' @param Weights
+#' @param method NJW, Ncut, DiffusionMap
+#' @param k
+#' @param t
+#' @param sparse
+#'
+#' @return
+#' @import RSpectra
+#' @import Matrix
+#' @export
+#'
+#' @examples
 clustering <- function(Weights, method, k, t=NULL, sparse=T) {
 
     a <- Sys.time()

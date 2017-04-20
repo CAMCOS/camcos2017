@@ -7,3 +7,4 @@
 
 # Mac files to ignore
 .DS_Store
+inst/doc

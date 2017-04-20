@@ -15,5 +15,13 @@ Description: Implementing spectral clustering on the 20newsgroups data set using
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: Rtsne, Matrix, RSpectra, ggplot2, dplyr
+Imports: Matrix, 
+    RSpectra, 
+    irlba, 
+    Rtsne, 
+    ggplot2, 
+    dplyr
 RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

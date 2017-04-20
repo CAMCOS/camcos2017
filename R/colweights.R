@@ -1,15 +1,22 @@
-
-
-# NOTE: this function assumes that multiplying by sqrt(weight) is appropriate
-
-# weightfunction: "beta" "step" "linear" "IDF"
-# par1, par2: beta parameters or step function boundaries
-# mode: linear function max (desired density max weight, e.g. 1/k)
-
+#' Column weighting
+#'
+#' @param data
+#' @param weightfunction "beta" "step" "linear" "IDF".
+#' @param par1 beta parameters or step function boundaries.
+#' @param par2 beta parameters or step function boundaries.
+#' @param mode linear function max (desired density max weight, e.g. 1/k).
+#' @param binary logical. Is data binary or not.
+#' @param sparse logical. Is data sparse or not.
+#'
+#' @return
+#' @import Matrix
+#' @export
+#'
+#' @examples
 colweights <- function (data, weightfunction, par1=NULL, par2=NULL,
     mode=NULL, binary=TRUE, sparse=TRUE) {
 
-    require(Matrix)
+    #require(Matrix)
 
     # construct Matrix object for use with Matrix package #####
     ### converts matrix and data frame object to Matrix

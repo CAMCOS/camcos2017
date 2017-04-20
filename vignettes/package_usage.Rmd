@@ -1,0 +1,40 @@
+---
+title: "Using the Package"
+author: "CAMCOS Spring 2017 Team"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using the Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+### Load the data
+
+```{r, warning = FALSE}
+library(camcos2017)
+library(magrittr)
+
+data(newsgroups)
+f <- "rec"
+sub0 <- news_subset(newsgroups, filter = f, binary = TRUE, vocab = FALSE)
+sub0.data <- sub0[[1]]
+sub0.labels <- sub0[[2]]
+```
+
+Layout of the subset data:
+
+```{r, echo = FALSE, results = "asis"}
+pander::pandoc.table(sub0.data[1:10, ])
+```
+
+
+### Run the clustering
+
+```{r, warning = FALSE}
+x <- colweights(data = sub0.data[,1:3], binary = TRUE, weightfunction = "IDF", sparse = TRUE) %>%
+  similarity("correlation", sparse = TRUE) %>%
+  clustering("DiffusionMap", k = 4, t = 0.5) %>%
+  clustercheck(sub0.labels, k = 4)
+x
+```

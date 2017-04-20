@@ -1,90 +1,75 @@
-#'Check accuracy of cluster assignments
+#' Checking cluster accuracy
 #'
-#'Calculate accuracy of the clustering algorithm by comparing algorithm
-#'generated cluster labels to the ground truth cluster labels.
+#' in the results table, true clusters are the rows, guessed clusters are the columns
 #'
-#'In the results matrix, ground truh cluster labels are rows and the algorithm
-#'generated cluster labels are columns.
-#'@param cluster Integer vector of algorithm generated cluster labels.
-#'@param Labels Integer vector of ground truth cluster labels.
-#'@param k Integer indicating the number of clusters.
+#' @param cluster
+#' @param Labels
+#' @param k
 #'
-#'@return List with two elements:
-#'  \enumerate{
-#'    \item Matrix of counts indicating how the ground truth labels are
-#'    distributed across the algorithm generated cluster labels.
-#'    \item Numeric. Percentage correctly assigned.
-#'  }
+#' @return
+#' @export
 #'
 #' @examples
-#' data(cluster6)
-#' # Perfect cluster assignment
-#' clustercheck(cluster6_labels, cluster6_labels, 6)
-#'
-#' # Random cluster assignment
-#' n <- length(cluster6_labels)
-#' random_labels <- sample(1:6, size = n, replace = TRUE)
-#' clustercheck(random_labels, cluster6_labels, 6)
 clustercheck <- function (cluster, Labels, k) {
 
 
-  comp <- cbind(cluster, Labels) # nx2 matrix of cluster assignments and true group membership
+comp <- cbind(cluster, Labels) # nx2 matrix of cluster assignments and true group membership
 
-  # results matrix
+# results matrix
 
-  results <- matrix( rep(0,k^2), nrow = k)
-
-
-  # results matrix: rows = true group, columns = assigned cluster
-
-  for (row in 1:nrow(comp)){
-
-      results[comp[row,2], comp[row,1]] <- results[comp[row,2], comp[row,1]] + 1
-
-  }
+results <- matrix( rep(0,k^2), nrow = k)
 
 
-  # calculate percentage distribution of each true group
+# results matrix: rows = true group, columns = assigned cluster
 
-  percent.cluster <- t(apply(results, 1, function(x) x/sum(x)))
+for (row in 1:nrow(comp)){
 
-  assignment <- matrix( rep(0,k), nrow = k)
+    results[comp[row,2], comp[row,1]] <- results[comp[row,2], comp[row,1]] + 1
 
-
-  # assign the most-correct true group to that cluster, and continue
-
-  for (index in 1:k) {
-
-      test <- which(percent.cluster == max(percent.cluster), arr.ind = TRUE)
-
-      assignment[ test[1],1 ] <- test[2]
-
-      percent.cluster[test[1],] <- 0   # remove that row (true group) from consideration
-
-      percent.cluster[,test[2]] <- 0   # remove that column (cluster) from consideration
-
-  }
+}
 
 
-  # calculate percentage assigned
+# calculate percentage distribution of each true group
 
-  correct <- 0
-  for (i in 1:nrow(assignment)){
+percent.cluster <- t(apply(results, 1, function(x) x/sum(x)))
 
-      correct <- correct + results[i,assignment[i,1]]
-
-  }
-
-  percent.score <- correct / sum(results)
+assignment <- matrix( rep(0,k), nrow = k)
 
 
-  # clean up the assignment matrix
+# assign the most-correct true group to that cluster, and continue
 
-  assignment <- cbind( seq(1,k), assignment[,1])
-  colnames(assignment) <- c("True Cluster", "Assigned Cluster")
+for (index in 1:k) {
+
+    test <- which(percent.cluster == max(percent.cluster), arr.ind = TRUE)
+
+    assignment[ test[1],1 ] <- test[2]
+
+    percent.cluster[test[1],] <- 0   # remove that row (true group) from consideration
+
+    percent.cluster[,test[2]] <- 0   # remove that column (cluster) from consideration
+
+}
 
 
-  return(list(results, assignment, percent.score))
+# calculate percentage assigned
+
+correct <- 0
+for (i in 1:nrow(assignment)){
+
+    correct <- correct + results[i,assignment[i,1]]
+
+}
+
+percent.score <- correct / sum(results)
+
+
+# clean up the assignment matrix
+
+assignment <- cbind( seq(1,k), assignment[,1])
+colnames(assignment) <- c("True Cluster", "Assigned Cluster")
+
+
+return(list(results, assignment, percent.score))
 
 }
 

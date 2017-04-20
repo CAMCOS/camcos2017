@@ -1,23 +1,28 @@
 
 
-### Mandatory:
-# data matrix
-# method: "correlation" "cosine" "dotproduct" "Gaussian"
-
-### Optional:
-# colscaling: "standardize" (center and divide by variance)
-# rowscaling: "L2" "L1"
-# centers: % of columns to be sampled, if desired (e.g. centers = .25)
-# seed: for repeatability
-# distance: for use with Gaussian Kernel; options = JSdivergence, L1, L2
-
-
+#' Calculate similarity matrices
+#'
+#' @param data matrix
+#' @param method "correlation" "cosine" "dotproduct" "Gaussian"
+#' @param rowscaling "L2" "L1"
+#' @param colscaling "standardize" (center and divide by variance)
+#' @param sigma variance for Gaussian Kernel
+#' @param centers % of columns to be sampled, if desired (e.g. centers = .25)
+#' @param seed for repeatability
+#' @param distance for use with Gaussian Kernel; options = JSdivergence, L1, L2
+#' @param sparse logical. Is the data sparse or not.
+#'
+#' @return
+#' @import Matrix
+#' @export
+#'
+#' @examples
 similarity <- function(data, method, rowscaling = NULL, colscaling = NULL,
     sigma = NULL, centers = NULL, seed = NULL, distance = NULL, sparse = T) {
 
     a <- Sys.time()
 
-    require(Matrix)
+    #require(Matrix)
 
     # data <- Matrix(data)
 

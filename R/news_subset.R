@@ -1,37 +1,19 @@
-.remap <- function(x, binary = TRUE) {
-  r <- sort(unique(x$row))
-  r.df <- data.frame(old.row = r, new.row = 1:length(r))
-  c <- sort(unique(x$col))
-  c.df <- data.frame(old.col = c, new.col = 1:length(c))
-  l <- sort(unique(x$label))
-  l.df <- data.frame(old.lab = l, new.lab = 1:length(l))
-
-  cat("Label Mapping: ", fill = TRUE)
-  print.data.frame(l.df, row.names = FALSE)
-
-  if (!binary) {
-    x %>%
-      left_join(r.df, by = c("row" = "old.row")) %>%
-      left_join(c.df, by = c("col" = "old.col")) %>%
-      left_join(l.df, by = c("label" = "old.lab")) %>%
-      select(-row, -col, -label) %>%
-      rename(row = new.row, col = new.col, label = new.lab) %>%
-      select(row, col, value, everything())
-  } else {
-    b <- rep(1, nrow(x))
-    x %>%
-      left_join(r.df, by = c("row" = "old.row")) %>%
-      left_join(c.df, by = c("col" = "old.col")) %>%
-      left_join(l.df, by = c("label" = "old.lab")) %>%
-      select(-row, -col, -label, -value) %>%
-      mutate(value = b) %>%
-      rename(row = new.row, col = new.col, label = new.lab) %>%
-      select(row, col, value, everything())
-  }
-}
-
+#' Select a subset of the full 20Newsgroupds dataset
+#'
+#' @param X
+#' @param filter
+#' @param binary
+#' @param vocabulary
+#'
+#' @return
+#' @import dplyr
+#' @export
+#'
+#' @examples
 news_subset <- function (X, filter, binary = TRUE, vocabulary = FALSE) {
-  library(dplyr)
+
+  #require(dplyr, quietly = TRUE, warn.conflicts = FALSE)
+
   if (is.numeric(filter)) {
     df <- X %>% filter(label %in% filter)
   } else if (is.character(filter)) {
@@ -49,4 +31,41 @@ news_subset <- function (X, filter, binary = TRUE, vocabulary = FALSE) {
   .remap(df, binary = binary)
 }
 
-#test1 <- news.subset(newsgroups, "comp")
+.remap <- function(x, binary = TRUE) {
+  r <- sort(unique(x$row))
+  r.df <- data.frame(old.row = r, new.row = 1:length(r))
+  c <- sort(unique(x$col))
+  c.df <- data.frame(old.col = c, new.col = 1:length(c))
+  l <- sort(unique(x$label))
+  l.df <- data.frame(old.lab = l, new.lab = 1:length(l))
+
+  cat("Label Mapping: ", fill = TRUE)
+  print.data.frame(l.df, row.names = FALSE)
+
+  if (!binary) {
+    bx <- x %>%
+      left_join(r.df, by = c("row" = "old.row")) %>%
+      left_join(c.df, by = c("col" = "old.col")) %>%
+      left_join(l.df, by = c("label" = "old.lab")) %>%
+      select(-row, -col, -label) %>%
+      rename(row = new.row, col = new.col, label = new.lab) %>%
+      select(row, col, value, everything())
+
+    labels <- bx %>% distinct(row, label) %>% select(label) %>% unlist(use.names = FALSE)
+    return(list(bx, labels))
+  } else {
+    b <- rep(1, nrow(x))
+    fx <- x %>%
+      left_join(r.df, by = c("row" = "old.row")) %>%
+      left_join(c.df, by = c("col" = "old.col")) %>%
+      left_join(l.df, by = c("label" = "old.lab")) %>%
+      select(-row, -col, -label, -value) %>%
+      mutate(value = b) %>%
+      rename(row = new.row, col = new.col, label = new.lab) %>%
+      select(row, col, value, everything())
+
+    labels <- fx %>% distinct(row, label) %>% select(label) %>% unlist(use.names = FALSE)
+    return(list(fx, labels))
+  }
+
+}

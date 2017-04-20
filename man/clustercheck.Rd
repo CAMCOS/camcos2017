@@ -2,40 +2,13 @@
 % Please edit documentation in R/clustercheck.R
 \name{clustercheck}
 \alias{clustercheck}
-\title{Check accuracy of cluster assignments}
+\title{Checking cluster accuracy}
 \usage{
 clustercheck(cluster, Labels, k)
 }
 \arguments{
-\item{cluster}{Integer vector of algorithm generated cluster labels.}
-
-\item{Labels}{Integer vector of ground truth cluster labels.}
-
-\item{k}{Integer indicating the number of clusters.}
-}
-\value{
-List with two elements:
- \enumerate{
-   \item Matrix of counts indicating how the ground truth labels are
-   distributed across the algorithm generated cluster labels.
-   \item Numeric. Percentage correctly assigned.
- }
+\item{k}{}
 }
 \description{
-Calculate accuracy of the clustering algorithm by comparing algorithm
-generated cluster labels to the ground truth cluster labels.
-}
-\details{
-In the results matrix, ground truh cluster labels are rows and the algorithm
-generated cluster labels are columns.
-}
-\examples{
-data(cluster6)
-# Perfect cluster assignment
-clustercheck(cluster6_labels, cluster6_labels, 6)
-
-# Random cluster assignment
-n <- length(cluster6_labels)
-random_labels <- sample(1:6, size = n, replace = TRUE)
-clustercheck(random_labels, cluster6_labels, 6)
+in the results table, true clusters are the rows, guessed clusters are the columns
 }
