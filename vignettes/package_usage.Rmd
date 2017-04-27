@@ -16,8 +16,7 @@ library(camcos2017)
 library(magrittr)
 
 data(newsgroups)
-f <- "rec"
-sub0 <- news_subset(newsgroups, filter = f, binary = TRUE, vocab = FALSE)
+sub0 <- news_subset(newsgroups, filter = c(2,8,12), binary = TRUE, vocab = FALSE)
 sub0.data <- sub0[[1]]
 sub0.labels <- sub0[[2]]
 ```
@@ -31,10 +30,10 @@ pander::pandoc.table(sub0.data[1:10, ])
 
 ### Run the clustering
 
-```{r, warning = FALSE}
+```{r, warning = FALSE, collapse = TRUE}
 x <- colweights(data = sub0.data[,1:3], binary = TRUE, weightfunction = "IDF", sparse = TRUE) %>%
   similarity("correlation", sparse = TRUE) %>%
-  clustering("DiffusionMap", k = 4, t = 0.5) %>%
-  clustercheck(sub0.labels, k = 4)
+  clustering("DiffusionMap", k = 3, t = 0.5) %>%
+  clustercheck(sub0.labels, k = 3)
 x
 ```

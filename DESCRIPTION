@@ -1,17 +1,19 @@
 Package: camcos2017
 Type: Package
-Title: CAMCOS Spring 2017 Unsupervised Market Segmentation for Verizon
-Version: 1.0.0
-Author: as.person(c("Fengmei Liu [aut]",
+Title: CAMCOS Spring 2017: Efficient and Scalable Spectral Clustering 
+    for Document Clustering.
+Version: 1.0.1
+Author: as.person(c("Shiou-Shiou Deng [aut]",
     "Joey Fitch [aut]",
-    "Rachel Li [aut]",
-    "Nate Kotila [aut]"
     "Sonia Kong [aut]",
-    "Andrew Zastovnik [aut]",
-    "Shiou-Shiou Deng [aut]",
-    "Ryan Quigley <ryan.quigley@sjsu.edu> [aut, cre]
+    "Nate Kotila [aut]",
+    "Rachel Li [aut]",
+    "Fengmei Liu [aut]",
+    "Ryan Quigley <ryan.quigley@sjsu.edu> [aut, cre],
+    "Andrew Zastovnik [aut]"
   ))
-Description: Implementing spectral clustering on the 20newsgroups data set using various combinations of data preprocessing steps and similarity functions.
+Description: Implementing spectral clustering on the 20newsgroups dataset using 
+    various combinations of data preprocessing steps and similarity functions.
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true

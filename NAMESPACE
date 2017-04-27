@@ -3,6 +3,7 @@
 export(clustercheck)
 export(clustering)
 export(colweights)
+export(insights)
 export(news_subset)
 export(rtsne_viz)
 export(similarity)

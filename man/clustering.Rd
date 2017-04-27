@@ -4,12 +4,27 @@
 \alias{clustering}
 \title{Spectral clustering}
 \usage{
-clustering(Weights, method, k, t = NULL, sparse = T)
+clustering(Weights, method, k, t = NULL, sparse = TRUE,
+  kmeans.method = "kmeans", m = NULL)
 }
 \arguments{
-\item{method}{NJW, Ncut, DiffusionMap}
+\item{Weights}{Matrix of similarity weights. Can be dense or sparse.}
 
-\item{sparse}{}
+\item{method}{NJW, Ncut, DiffusionMap.}
+
+\item{k}{Number of clusters.}
+
+\item{t}{Number of steps for the diffusion map.}
+
+\item{sparse}{Logical. Indicates whether the input for the weights argument
+is sparse.}
+
+\item{kmeans.method}{One of the following: "kmeans", "fuzzy", "poly.fuzzy"}
+
+\item{m}{Fuzziness parameter. Defaults to m=2 for fuzzy; m=.5 for poly.fuzzy.}
+}
+\value{
+Integer vector. Cluster assignments for each row of original data.
 }
 \description{
 Spectral clustering

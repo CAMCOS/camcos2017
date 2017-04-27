@@ -4,21 +4,28 @@
 \alias{colweights}
 \title{Column weighting}
 \usage{
-colweights(data, weightfunction, par1 = NULL, par2 = NULL, mode = NULL,
-  binary = TRUE, sparse = TRUE)
+colweights(data, weightfunction, sparseinput, par1 = NULL, par2 = NULL,
+  mode = NULL, binary = TRUE, convertsparse = TRUE)
 }
 \arguments{
-\item{weightfunction}{"beta" "step" "linear" "IDF".}
+\item{data}{Matrix of counts.}
 
-\item{par1}{beta parameters or step function boundaries.}
+\item{weightfunction}{One of the following: beta", "step", "linear", "IDF", "IDF^2".}
 
-\item{par2}{beta parameters or step function boundaries.}
+\item{sparseinput}{Logical. Is the input data sparse?}
 
-\item{mode}{linear function max (desired density max weight, e.g. 1/k).}
+\item{par1}{Beta parameters or step function boundaries.}
 
-\item{binary}{logical. Is data binary or not.}
+\item{par2}{Beta parameters or step function boundaries.}
 
-\item{sparse}{logical. Is data sparse or not.}
+\item{mode}{Linear function max (desired density max weight, e.g. 1/k).}
+
+\item{binary}{Logical. Convert data to binary?}
+
+\item{convertsparse}{Logical. If your matrix is dense, convert to sparse}
+}
+\value{
+Processed version of original input matrix.
 }
 \description{
 Column weighting

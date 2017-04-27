@@ -7,8 +7,22 @@
 clustercheck(cluster, Labels, k)
 }
 \arguments{
-\item{k}{}
+\item{cluster}{Integer vector. Labels from clustering}
+
+\item{Labels}{Integer vector. Ground truth labels.}
+
+\item{k}{Integer. Number of clusters.}
+}
+\value{
+List of 3. Confusion matrix, label mapping, accuracy.
 }
 \description{
-in the results table, true clusters are the rows, guessed clusters are the columns
+In the results table, true clusters are the rows, guessed clusters are the
+columns
+}
+\examples{
+# Example of a results matrix that FAILS clustercheck
+# Cluster assignment of "true cluster #3" is split too evenly
+results <- matrix(c(15,31,4,452,5,0,1,384,1,20,1,3,34,141,56,53,289,357,0,
+  2,282,6,160,5,527,32,48,51,9,6,4,2,203,0,0,5), nrow = 6)
 }

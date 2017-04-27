@@ -6,27 +6,31 @@
 \usage{
 similarity(data, method, rowscaling = NULL, colscaling = NULL,
   sigma = NULL, centers = NULL, seed = NULL, distance = NULL,
-  sparse = T)
+  sparse = TRUE)
 }
 \arguments{
-\item{data}{matrix}
+\item{data}{Matrix.}
 
-\item{method}{"correlation" "cosine" "dotproduct" "Gaussian"}
+\item{method}{One of the following: "correlation", "cosine", "dotproduct", "Gaussian".}
 
-\item{rowscaling}{"L2" "L1"}
+\item{rowscaling}{One of the following: "L2", "L1".}
 
-\item{colscaling}{"standardize" (center and divide by variance)}
+\item{colscaling}{Single option: "standardize" (center and divide by variance).}
 
-\item{sigma}{variance for Gaussian Kernel}
+\item{sigma}{Variance for Gaussian Kernel method.}
 
-\item{centers}{% of columns to be sampled, if desired (e.g. centers = .25)}
+\item{centers}{Proportion of columns to be sampled, if desired (e.g. centers = .25).}
 
-\item{seed}{for repeatability}
+\item{seed}{For sampling reproducibility.}
 
-\item{distance}{for use with Gaussian Kernel; options = JSdivergence, L1, L2}
+\item{distance}{For use with Gaussian Kernel; options = "JSdivergence", "L1", "L2"}
 
-\item{sparse}{logical. Is the data sparse or not.}
+\item{sparse}{Logical. Is the data sparse or not.}
+}
+\value{
+Similarity matrix.
 }
 \description{
-Calculate similarity matrices
+Note: this function sets the self-similarity diagonal = 0. For certain
+applications, diagonal = 1 may be more appropriate.
 }
