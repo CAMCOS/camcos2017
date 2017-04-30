@@ -84,7 +84,7 @@ clustering <- function(Weights, method, k, t=NULL, sparse=TRUE,
 
     V <- eigs_sym(W_tilde, k, 'LM')$vector
     V = matrix(rep(dvec_inv,k-1), ncol = k-1) * V[,2:k]
-
+    V = V / (matrix(rep(sqrt(rowSums(V^2)),k-1),ncol=k-1))
     cluster.out <- kmeans(V, k, nstart = 100)
 
   }
