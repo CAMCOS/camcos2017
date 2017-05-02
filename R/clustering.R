@@ -12,14 +12,14 @@
 #' @return Integer vector. Cluster assignments for each row of original data.
 #' @import RSpectra
 #' @import Matrix
+#' @import irlba
+#' @import fclust
 #' @export
 clustering <- function(Weights, method, k, t=NULL, sparse=TRUE,
                        kmeans.method="kmeans", m=NULL) {
 
   a <- Sys.time()
 
-  #require(RSpectra)
-  #require(Matrix)
 
   if (method == "NJW") {
 
@@ -41,10 +41,10 @@ clustering <- function(Weights, method, k, t=NULL, sparse=TRUE,
     Z <- D %*% Weights %*% D
 
     if (sparse==F) {
-      EZ <- eigs_sym(Z, k, 'LM')$vector }
+      EZ <- eigs_sym(Z, k, 'LM')$vector
+    }
     else {
-      require(irlba)
-      EZ <- partial_eigen(x=Z, n = k, symmetric = TRUE)$vectors
+      EZ <- partial_eigen(x=Z, n = k+1, symmetric = TRUE)$vectors
     }
     U <- EZ/sqrt(rowSums(EZ^2))
 
@@ -55,7 +55,6 @@ clustering <- function(Weights, method, k, t=NULL, sparse=TRUE,
     }
 
     else if (kmeans.method=="fuzzy") {
-      require(fclust)
       if (is.null(m)) {
         m <- 2
       }
@@ -63,7 +62,6 @@ clustering <- function(Weights, method, k, t=NULL, sparse=TRUE,
     }
 
     else if (kmeans.method=="poly.fuzzy") {
-      require(fclust)
       if (is.null(m)) {
         m <- .5
       }
@@ -76,15 +74,22 @@ clustering <- function(Weights, method, k, t=NULL, sparse=TRUE,
 
     n <- nrow(Weights)
     dvec_inv = 1/sqrt(rowSums(Weights))
-    W_tilde = Matrix(rep(dvec_inv,n), ncol=n) * Weights * t(Matrix(rep(dvec_inv,n),ncol=n))
+    #W_tilde = Matrix(rep(dvec_inv,n), ncol=n) * Weights * t(Matrix(rep(dvec_inv,n),ncol=n))
+    W_tilde = Diagonal(n,dvec_inv) %*% Weights %*% Diagonal(n,dvec_inv)
     W_tilde = (W_tilde+t(W_tilde))/2
 
     # diag(dvec_inv) %*% Weights %*% diag(dvec_inv) ?
     # why the average part?
 
+    if (sparse==F) {
+      EZ <- eigs_sym(W_tilde, k, 'LM')$vector }
+    else {
+      EZ <- partial_eigen(x=W_tilde, n = k, symmetric = TRUE)$vectors
+    }
+
     V <- eigs_sym(W_tilde, k, 'LM')$vector
     V = matrix(rep(dvec_inv,k-1), ncol = k-1) * V[,2:k]
-    V = V / (matrix(rep(sqrt(rowSums(V^2)),k-1),ncol=k-1))
+
     cluster.out <- kmeans(V, k, nstart = 100)
 
   }
@@ -96,33 +101,66 @@ clustering <- function(Weights, method, k, t=NULL, sparse=TRUE,
 
       stop("Specify a t value.") }
 
+
     n <- nrow(Weights)
     dvec_inv = 1/sqrt(rowSums(Weights))
-    W_tilde = matrix(rep(dvec_inv,n), ncol=n) * Weights * t(matrix(rep(dvec_inv,n),ncol=n))
+    #W_tilde = matrix(rep(dvec_inv,n), ncol=n) * Weights * t(matrix(rep(dvec_inv,n),ncol=n))
+    W_tilde = Diagonal(n,dvec_inv) %*% Weights %*% Diagonal(n,dvec_inv)
     W_tilde = (W_tilde+t(W_tilde))/2
+
 
     # diag(dvec_inv) %*% Weights %*% diag(dvec_inv) ?
     # why the average part?
 
-    V <- eigs_sym(W_tilde, k, 'LM')$vector
-    lambda <- eigs_sym(W_tilde, k, 'LM')$value
-    V_inv = 1/sqrt((rowSums(V[,2:k]^2)))
-    V <- matrix(rep(V_inv,k-1), ncol=k-1) * V[,2:k]
-    V = matrix(rep(dvec_inv,k-1), ncol = k-1)  * V
-    V = (matrix(rep(lambda[2:k], each=n), ncol=k-1)^t )* V
+    # EV <- eigs_sym(W_tilde, k, 'LM')
+    # V <- EV$vector
+    # lambda <- EV$value
+    # V_inv = 1/sqrt((rowSums(V[,2:k]^2)))
+    # V <- matrix(rep(V_inv,k-1), ncol=k-1) * V[,2:k]
+    # V = matrix(rep(dvec_inv,k-1), ncol = k-1)  * V
+    # V = (matrix(rep(lambda[2:k], each=n), ncol=k-1)^t )* V
 
-    cluster.out <- kmeans(V, k, nstart = 100)
+    EV <- eigs_sym(W_tilde, k+1, 'LM')
+    V <- EV$vector
+    lambda <- EV$value
+    V_inv <-  1/sqrt((rowSums(V[,2:(k+1)]^2)))
+    V <- matrix(rep(V_inv,k), ncol=k) * V[,2:(k+1)]
+    V <-  matrix(rep(dvec_inv,k), ncol = k)  * V
+    V <-  (matrix(rep(lambda[2:(k+1)], each=n), ncol=k)^t )* V
+
+    # run kmeans in eigenspace:
+
+    if (kmeans.method=="kmeans") {
+      cluster.out <- kmeans(V, centers=k, nstart = 100)
+    }
+
+    else if (kmeans.method=="fuzzy") {
+      if (is.null(m)) {
+        m <- 2
+      }
+      cluster.out <- FKM(X=V,k=k, m=m, RS=10)
+    }
+
+    else if (kmeans.method=="poly.fuzzy") {
+      if (is.null(m)) {
+        m <- .5
+      }
+      cluster.out <- FKM.pf(X=V,k=k, b=m, RS=10)
+    }
 
   }
+
+  else {
+    stop("Pick a valid clustering method.") }
 
   b <- Sys.time()
   time.elapsed <- b - a
   print(time.elapsed)
 
-  return(cluster.out)
+  # Output
+  cluster.out
 
 }
-
 
 
 

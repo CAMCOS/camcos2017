@@ -2,7 +2,7 @@ Package: camcos2017
 Type: Package
 Title: CAMCOS Spring 2017: Efficient and Scalable Spectral Clustering 
     for Document Clustering.
-Version: 1.0.1
+Version: 1.1.0
 Author: as.person(c("Shiou-Shiou Deng [aut]",
     "Joey Fitch [aut]",
     "Sonia Kong [aut]",
@@ -20,6 +20,7 @@ LazyData: true
 Imports: Matrix, 
     RSpectra, 
     irlba, 
+    fclust, 
     Rtsne, 
     ggplot2, 
     dplyr

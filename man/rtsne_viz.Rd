@@ -2,13 +2,18 @@
 % Please edit documentation in R/rtsne_viz.R
 \name{rtsne_viz}
 \alias{rtsne_viz}
-\title{Title}
+\title{Rtsne visualization}
 \usage{
 rtsne_viz(data, labels)
 }
 \arguments{
-\item{labels}{}
+\item{data}{Original data.}
+
+\item{labels}{Integer vector. Can be true labels or labels created by clustering output.}
+}
+\value{
+plot
 }
 \description{
-Title
+Rtsne visualization
 }

@@ -1,15 +1,23 @@
 #' Select a subset of the full 20Newsgroupds dataset
 #'
-#' @param X
-#' @param filter
-#' @param binary
-#' @param vocabulary
+#' Label names: comp.graphics comp.os.ms-windows.misc comp.sys.ibm.pc.hardware
+#' comp.sys.mac.hardware comp.windows.x rec.autos rec.motorcycles
+#' rec.sport.baseball rec.sport.hockey sci.crypt sci.electronics sci.med
+#' sci.space misc.forsale talk.politics.misc talk.politics.guns
+#' talk.politics.mideast talk.religion.misc alt.atheism soc.religion.christian
 #'
-#' @return
+#' @param X The newsgroups data object loaded with data(newsgroups).
+#' @param filter Either an integer vector specifying the label numbers, or a
+#'   character vector specifying the label names. Supports "starts with" partial
+#'   matching for label names.
+#' @param binary Logical. Make the data values 1's
+#' @param vocabulary Logical. Include a word column in the returned data frame
+#'   in list element one.
+#'
+#' @return List of 2. (1) The remapped data. (2) The distinct labels
+#'   corresponding to each row.
 #' @import dplyr
 #' @export
-#'
-#' @examples
 news_subset <- function (X, filter, binary = TRUE, vocabulary = FALSE) {
 
   #require(dplyr, quietly = TRUE, warn.conflicts = FALSE)
@@ -52,7 +60,7 @@ news_subset <- function (X, filter, binary = TRUE, vocabulary = FALSE) {
       select(row, col, value, everything())
 
     labels <- bx %>% distinct(row, label) %>% select(label) %>% unlist(use.names = FALSE)
-    return(list(bx, labels))
+    list(data = bx, labels = labels)
   } else {
     b <- rep(1, nrow(x))
     fx <- x %>%
@@ -65,7 +73,7 @@ news_subset <- function (X, filter, binary = TRUE, vocabulary = FALSE) {
       select(row, col, value, everything())
 
     labels <- fx %>% distinct(row, label) %>% select(label) %>% unlist(use.names = FALSE)
-    return(list(fx, labels))
+    list(data = fx, labels = labels)
   }
 
 }

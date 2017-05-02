@@ -5,12 +5,14 @@
 \title{Column weighting}
 \usage{
 colweights(data, weightfunction, sparseinput, par1 = NULL, par2 = NULL,
-  mode = NULL, binary = TRUE, convertsparse = TRUE)
+  mode = NULL, binary = TRUE, convertsparse = TRUE, lower = 2,
+  upper = NULL)
 }
 \arguments{
 \item{data}{Matrix of counts.}
 
-\item{weightfunction}{One of the following: beta", "step", "linear", "IDF", "IDF^2".}
+\item{weightfunction}{One of the following: beta", "step", "linear", "IDF",
+"IDF^2".}
 
 \item{sparseinput}{Logical. Is the input data sparse?}
 
@@ -23,6 +25,12 @@ colweights(data, weightfunction, sparseinput, par1 = NULL, par2 = NULL,
 \item{binary}{Logical. Convert data to binary?}
 
 \item{convertsparse}{Logical. If your matrix is dense, convert to sparse}
+
+\item{lower}{Integer. Lower bound for column sum in order to retain column;
+columns with sums below this threshold will be removed.}
+
+\item{upper}{Integer. Upper bound for column sum in order to retain column;
+columns with sums above this threshold will be removed.}
 }
 \value{
 Processed version of original input matrix.

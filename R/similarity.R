@@ -19,11 +19,11 @@
 #' @import Matrix
 #' @export
 similarity <- function(data, method, rowscaling = NULL, colscaling = NULL,
-                       sigma = NULL, centers = NULL, seed = NULL, distance = NULL, sparse = TRUE) {
+                       sigma = NULL, centers = NULL, seed = NULL,
+                       distance = NULL, sparse = TRUE) {
 
   a <- Sys.time()
 
-  #require(Matrix)
 
   # data <- Matrix(data)
 
@@ -104,13 +104,15 @@ similarity <- function(data, method, rowscaling = NULL, colscaling = NULL,
   #####
   ##### Full data similarity matrix #####
 
+  # dense matrix:
+
   if (sparse == F) {
 
     if (is.null(centers)) {
 
       if (method == "correlation") {
 
-        centeredcolumns <- data-colMeans(data) # center the data by column
+        centeredcolumns <- t(t(data)-colMeans(data)) # center the data by column
 
         rowvar <- rowSums(centeredcolumns^2) # store the variances for each row (where colMeans=0)
 
@@ -130,7 +132,7 @@ similarity <- function(data, method, rowscaling = NULL, colscaling = NULL,
       else if (method == "corr.hack") {
 
         # center the data by column
-        centeredcolumns <- data-colMeans(data)
+        centeredcolumns <- t(t(data)-colMeans(data))
         # # store the variances for each row (where colMeans=0)
         # rowvar <- rowSums(centeredcolumns^2)
         # calculate the covariance matrix (dot product all rows)
@@ -277,6 +279,8 @@ similarity <- function(data, method, rowscaling = NULL, colscaling = NULL,
 
   }
 
+
+  # sparse matrix:
 
   else {
 
@@ -284,47 +288,50 @@ similarity <- function(data, method, rowscaling = NULL, colscaling = NULL,
 
       if (method == "correlation") {
 
-        centeredcolumns <- data
+        # centeredcolumns <- data
+        #
+        # rowvar <- rowSums(centeredcolumns^2) # store the variances for each row (where colMeans=0)
+        #
+        # Cov.matrix <- tcrossprod(centeredcolumns) # calculate the covariance matrix (dot product all rows)
+        #
+        # # corr = cov(x,y) / sqrt(var(x)var(y)
+        # Corr.true <- Cov.matrix/sqrt(rowvar)
+        # Similarity <- t(t(Corr.true)/sqrt(rowvar))
+        #
+        # # scale the matrix to (0,1), excluding the diagonal
+        # diag(Similarity) <- rep(0,nrow(Similarity))
+        # Similarity <- (Similarity - min(Similarity))/(range(Similarity)[2] - range(Similarity)[1])
+        # diag(Similarity) <- rep(0, nrow(Similarity))
 
-        rowvar <- rowSums(centeredcolumns^2) # store the variances for each row (where colMeans=0)
-
-        Cov.matrix <- tcrossprod(centeredcolumns) # calculate the covariance matrix (dot product all rows)
-
-        # corr = cov(x,y) / sqrt(var(x)var(y)
-        Corr.true <- Cov.matrix/sqrt(rowvar)
-        Similarity <- t(t(Corr.true)/sqrt(rowvar))
-
-        # scale the matrix to (0,1), excluding the diagonal
-        diag(Similarity) <- rep(0,nrow(Similarity))
-        Similarity <- (Similarity - min(Similarity))/(range(Similarity)[2] - range(Similarity)[1])
-        diag(Similarity) <- rep(0, nrow(Similarity))
+        stop("Correlation does not work on a sparse matrix. Try using a dense matrix instead.")
 
       }
 
       else if (method == "corr.hack") {
 
-        centeredcolumns <- data
-        # # store the variances for each row (where colMeans=0)
-        # rowvar <- rowSums(centeredcolumns^2)
-        # calculate the covariance matrix (dot product all rows)
-        Cov.matrix <- tcrossprod(centeredcolumns)
-        # calculate the length of each row (eventually scale by row&col)
-        cov.rowsums <- rowSums(Cov.matrix^2)
-        Corr.hack <- Cov.matrix/sqrt(cov.rowsums)
-        Similarity <- t(t(Corr.hack)/sqrt(cov.rowsums))
-        # scale the matrix to (0,1), excluding the diagonal
-        diag(Similarity) <- rep(0,nrow(Similarity))
-        Similarity <- (Similarity - min(Similarity))/(range(Similarity)[2] - range(Similarity)[1])
-        diag(Similarity) <- rep(0, nrow(Similarity))
+        # centeredcolumns <- data
+        # # # store the variances for each row (where colMeans=0)
+        # # rowvar <- rowSums(centeredcolumns^2)
+        # # calculate the covariance matrix (dot product all rows)
+        # Cov.matrix <- tcrossprod(centeredcolumns)
+        # # calculate the length of each row (eventually scale by row&col)
+        # cov.rowsums <- rowSums(Cov.matrix^2)
+        # Corr.hack <- Cov.matrix/sqrt(cov.rowsums)
+        # Similarity <- t(t(Corr.hack)/sqrt(cov.rowsums))
+        # # scale the matrix to (0,1), excluding the diagonal
+        # diag(Similarity) <- rep(0,nrow(Similarity))
+        # Similarity <- (Similarity - min(Similarity))/(range(Similarity)[2] - range(Similarity)[1])
+        # diag(Similarity) <- rep(0, nrow(Similarity))
+
+        stop("Correlation does not work on a sparse matrix. Try using a dense matrix instead.")
 
       }
 
       else if (method == "cosine") {
 
         rowlength <- rowSums(data^2)
-        Dot.prods <- tcrossprod(data)
-        Cosines <- Dot.prods/sqrt(rowlength)
-        Similarity <- t(t(Cosines)/sqrt(rowlength))
+        data <- data/sqrt(rowlength)    # cosine normalizes each vector to unit length
+        Similarity <- tcrossprod(data)
         diag(Similarity) <- rep(0,nrow(Similarity))
         Similarity <- (Similarity - min(Similarity))/(range(Similarity)[2] - range(Similarity)[1])
         diag(Similarity) <- rep(0, nrow(Similarity))
@@ -448,13 +455,14 @@ similarity <- function(data, method, rowscaling = NULL, colscaling = NULL,
     #####
     #####
 
-  }
+  }  #
 
   b <- Sys.time()
   time.elapsed <- b - a
 
   print(time.elapsed)
 
-  return(Similarity)
+  # Output
+  Similarity
 
 }

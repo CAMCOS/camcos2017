@@ -1,13 +1,18 @@
 #' Column weighting
 #'
 #' @param data Matrix of counts.
-#' @param weightfunction One of the following: beta", "step", "linear", "IDF", "IDF^2".
+#' @param weightfunction One of the following: beta", "step", "linear", "IDF",
+#'   "IDF^2".
 #' @param sparseinput Logical. Is the input data sparse?
 #' @param par1 Beta parameters or step function boundaries.
 #' @param par2 Beta parameters or step function boundaries.
 #' @param mode Linear function max (desired density max weight, e.g. 1/k).
 #' @param binary Logical. Convert data to binary?
 #' @param convertsparse Logical. If your matrix is dense, convert to sparse
+#' @param lower Integer. Lower bound for column sum in order to retain column;
+#'   columns with sums below this threshold will be removed.
+#' @param upper Integer. Upper bound for column sum in order to retain column;
+#'   columns with sums above this threshold will be removed.
 #'
 #' @return Processed version of original input matrix.
 #' @import Matrix
@@ -15,9 +20,8 @@
 colweights <- function (data, weightfunction, sparseinput,
                         par1=NULL, par2=NULL, mode=NULL,
                         binary=TRUE,
-                        convertsparse=TRUE) {
-
-  #require(Matrix)
+                        convertsparse=TRUE,
+                        lower=2, upper=NULL) {
 
   # construct Matrix object for use with Matrix package #####
   ### converts matrix and data frame object to Matrix
@@ -26,7 +30,7 @@ colweights <- function (data, weightfunction, sparseinput,
 
     if (is.matrix(data)) {
       if (binary==T) {
-        data <- sparseMatrix(i=data[,1], j=data[,2])
+        data <- sparseMatrix(i=data[,1], j=data[,2], x=rep(1, nrow(data)))
       }
 
       else {
@@ -37,16 +41,23 @@ colweights <- function (data, weightfunction, sparseinput,
     else if (is.data.frame(data)) {
 
       if (binary==T) {
-        data <- sparseMatrix(i=data[,1], j=data[,2])
+        data <- sparseMatrix(i=data[,1], j=data[,2], x=rep(1, nrow(data)))
       }
 
       else {
         data <- sparseMatrix(i=data[,1], j=data[,2], x=data[,3])
       }
     }
+
+    else if (binary==T) {
+
+      data[data>0]<-1
+
+    }
+
   }
 
-  else{   # given a dense matrix
+  else{   # given a dense matrix (sparseinput == F)
 
     if(binary==TRUE) {
 
@@ -76,7 +87,7 @@ colweights <- function (data, weightfunction, sparseinput,
 
   #####
   #####
-  # find density proportion of each column #####
+  ##### Find density proportion of each column #####
 
   weightfunction <- as.character(weightfunction)
 
@@ -97,7 +108,40 @@ colweights <- function (data, weightfunction, sparseinput,
 
   #####
   #####
-  # calculate weighted matrix & return #####
+  ##### Remove columns outside some threshold (and monitor the rows) #####
+
+  if( !(is.null(lower))) {
+
+    data <- data[,which(colsum >= lower)]
+
+    colsum <- colsum[which(colsum >= lower)]
+
+  }
+
+  if( !(is.null(upper))) {
+
+    data <- data[,which(colsum <= upper)]
+
+    colsum <- colsum[which(colsum <= upper)]
+
+  }
+
+  rowsum <- rowSums(data)
+
+  if(min(rowsum) <= 0) {
+
+    resp <- readline(prompt="One or more rows has zero weight. \n
+                     Make sure that you fix this before continuing. \n
+                     Press the ENTER key to continue. \n")
+
+  }
+
+
+
+
+  #####
+  #####
+  ##### Calculate weighted matrix & return #####
 
   if (sparseinput==F & convertsparse==F) { # if you insist on a dense matrix
 
@@ -208,33 +252,39 @@ colweights <- function (data, weightfunction, sparseinput,
 
     else if (weightfunction == "IDF") {
 
-      # IDF column weighting = log( N/ 1+density )
-      data.idf <- log(nrow(data)/(1 + colsum))
+      # IDF column weighting = log( N/ density )
+      data.idf <- log(nrow(data)/(colsum))
       # Multiply each column by its IDF weight
       data.idf.diag <- Diagonal(n = length(data.idf), x=data.idf)
       data.tfidf <- crossprod(t(data), data.idf.diag)
-      # return(data.tfidf)
+      return(data.tfidf)
 
       # Row normalize
-      data.tfidf.rn <- data.tfidf/ sqrt(rowSums(data.tfidf^2))
+      # data.tfidf.rn <- data.tfidf/ sqrt(rowSums(data.tfidf^2))
       # data.tfidf.rn <- data.tfidf/ rowSums(data.tfidf)
-      return(data.tfidf.rn)
+      # return(data.tfidf.rn)
 
     }
 
     else if (weightfunction == "IDF^2") {
 
-      # IDF column weighting = log( N/ 1+density )
-      data.idf <- (log(nrow(data)/(1 + colsum)))^2
+      # IDF column weighting = log( N/ density )
+      data.idf <- (log(nrow(data)/(colsum)))^2
       # Multiply each column by its IDF weight
       data.idf.diag <- Diagonal(n = length(data.idf), x=data.idf)
       data.tfidf <- crossprod(t(data), data.idf.diag)
-      # return(data.tfidf)
+      return(data.tfidf)
 
       # Row normalize
-      data.tfidf.rn <- data.tfidf/ sqrt(rowSums(data.tfidf^2))
+      # data.tfidf.rn <- data.tfidf/ sqrt(rowSums(data.tfidf^2))
       # data.tfidf.rn <- data.tfidf/ rowSums(data.tfidf)
-      return(data.tfidf.rn)
+      # return(data.tfidf.rn)
+
+    }
+
+    else if (weightfunction == "none") {
+
+      return(data)
 
     }
 

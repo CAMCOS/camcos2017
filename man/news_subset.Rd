@@ -7,8 +7,25 @@
 news_subset(X, filter, binary = TRUE, vocabulary = FALSE)
 }
 \arguments{
-\item{vocabulary}{}
+\item{X}{The newsgroups data object loaded with data(newsgroups).}
+
+\item{filter}{Either an integer vector specifying the label numbers, or a
+character vector specifying the label names. Supports "starts with" partial
+matching for label names.}
+
+\item{binary}{Logical. Make the data values 1's}
+
+\item{vocabulary}{Logical. Include a word column in the returned data frame
+in list element one.}
+}
+\value{
+List of 2. (1) The remapped data. (2) The distinct labels
+  corresponding to each row.
 }
 \description{
-Select a subset of the full 20Newsgroupds dataset
+Label names: comp.graphics comp.os.ms-windows.misc comp.sys.ibm.pc.hardware
+comp.sys.mac.hardware comp.windows.x rec.autos rec.motorcycles
+rec.sport.baseball rec.sport.hockey sci.crypt sci.electronics sci.med
+sci.space misc.forsale talk.politics.misc talk.politics.guns
+talk.politics.mideast talk.religion.misc alt.atheism soc.religion.christian
 }
