@@ -4,7 +4,7 @@
 # Note: vocab should be one to one with column indices.
 
 getInsights <- function(cluster, vocab, n){
-  library(Rspectra)
+  library(RSpectra)
   svd.out <- svds(cluster, 4)
   v <- svd.out$v #dim(v) 61066     4
 
