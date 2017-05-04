@@ -126,8 +126,13 @@ clustering <- function(Weights, method, k, t=NULL, sparse=TRUE,
     V_inv <-  1/sqrt((rowSums(V[,2:(k+1)]^2)))
     V <- matrix(rep(V_inv,k), ncol=k) * V[,2:(k+1)]
     V <-  matrix(rep(dvec_inv,k), ncol = k)  * V
-    V <-  (matrix(rep(lambda[2:(k+1)], each=n), ncol=k)^t )* V
-
+    #V <-  (matrix(rep(lambda[2:(k+1)], each=n), ncol=k)^t )* V
+    if(t==0.5){
+      V <-  sqrt(sqrt((matrix(rep(lambda[2:(k+1)], each=n), ncol=k)^(4*t))))* V
+    }
+    else {
+      V <-  sqrt((matrix(rep(lambda[2:(k+1)], each=n), ncol=k)^(2*t)))* V
+    }
     # run kmeans in eigenspace:
 
     if (kmeans.method=="kmeans") {
