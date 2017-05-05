@@ -23,7 +23,9 @@ Imports: Matrix,
     fclust, 
     Rtsne, 
     ggplot2, 
-    dplyr
+    dplyr, 
+    rgl,
+    lattice
 RoxygenNote: 6.0.1
 Suggests: knitr,
     rmarkdown

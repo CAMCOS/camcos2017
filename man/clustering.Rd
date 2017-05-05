@@ -29,3 +29,6 @@ Integer vector. Cluster assignments for each row of original data.
 \description{
 Spectral clustering
 }
+\seealso{
+\code{\link{similarity}}
+}

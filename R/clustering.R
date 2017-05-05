@@ -10,6 +10,7 @@
 #' @param m Fuzziness parameter. Defaults to m=2 for fuzzy; m=.5 for poly.fuzzy.
 #'
 #' @return Integer vector. Cluster assignments for each row of original data.
+#' @seealso \code{\link{similarity}}
 #' @import RSpectra
 #' @import Matrix
 #' @import irlba

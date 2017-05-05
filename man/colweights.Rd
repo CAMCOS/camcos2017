@@ -14,7 +14,8 @@ colweights(data, weightfunction, sparseinput, par1 = NULL, par2 = NULL,
 \item{weightfunction}{One of the following: beta", "step", "linear", "IDF",
 "IDF^2".}
 
-\item{sparseinput}{Logical. Is the input data sparse?}
+\item{sparseinput}{Logical. Is your data in sparse (long) format? (Long
+format = Nx3 matrix-like object of nonzero entries)}
 
 \item{par1}{Beta parameters or step function boundaries.}
 
@@ -37,4 +38,7 @@ Processed version of original input matrix.
 }
 \description{
 Column weighting
+}
+\seealso{
+\code{\link{similarity}}
 }

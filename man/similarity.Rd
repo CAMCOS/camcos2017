@@ -6,7 +6,7 @@
 \usage{
 similarity(data, method, rowscaling = NULL, colscaling = NULL,
   sigma = NULL, centers = NULL, seed = NULL, distance = NULL,
-  sparse = TRUE)
+  sparse = T)
 }
 \arguments{
 \item{data}{Matrix.}
@@ -33,4 +33,7 @@ Similarity matrix.
 \description{
 Note: this function sets the self-similarity diagonal = 0. For certain
 applications, diagonal = 1 may be more appropriate.
+}
+\seealso{
+\code{\link{colweights}}, \code{\link{clustering}}
 }

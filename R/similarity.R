@@ -1,5 +1,3 @@
-
-
 #' Calculate similarity matrices
 #'
 #' Note: this function sets the self-similarity diagonal = 0. For certain
@@ -16,16 +14,15 @@
 #' @param sparse Logical. Is the data sparse or not.
 #'
 #' @return Similarity matrix.
+#' @seealso \code{\link{colweights}}, \code{\link{clustering}}
 #' @import Matrix
 #' @export
 similarity <- function(data, method, rowscaling = NULL, colscaling = NULL,
-                       sigma = NULL, centers = NULL, seed = NULL,
-                       distance = NULL, sparse = TRUE) {
+                       sigma = NULL, centers = NULL, seed = NULL, distance = NULL, sparse = T) {
 
   a <- Sys.time()
 
-
-  # data <- Matrix(data)
+  # require(Matrix)
 
   ##### Column scaling #####
 
@@ -102,9 +99,11 @@ similarity <- function(data, method, rowscaling = NULL, colscaling = NULL,
 
   #####
   #####
-  ##### Full data similarity matrix #####
+  ##### Compute the NxN similarity matrix #####
 
-  # dense matrix:
+  ###
+  ### dense matrix:
+  ###
 
   if (sparse == F) {
 
@@ -279,8 +278,9 @@ similarity <- function(data, method, rowscaling = NULL, colscaling = NULL,
 
   }
 
-
-  # sparse matrix:
+  ###
+  ### sparse matrix:
+  ###
 
   else {
 
@@ -462,7 +462,6 @@ similarity <- function(data, method, rowscaling = NULL, colscaling = NULL,
 
   print(time.elapsed)
 
-  # Output
-  Similarity
+  return(Similarity)
 
 }
